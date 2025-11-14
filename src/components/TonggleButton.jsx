@@ -12,7 +12,7 @@ export default function ToggleButton({ status, onChange }) {
             : "border-gray-300 text-gray-400 hover:border-yellow-300 hover:text-yellow-500"
         }`}
       >
-        All
+        Semua
       </button>
       {/* Tombol Pending */}
       <button
@@ -23,7 +23,7 @@ export default function ToggleButton({ status, onChange }) {
             : "border-gray-300 text-gray-400 hover:border-yellow-300 hover:text-yellow-500"
         }`}
       >
-        Pending
+        Belum Dikembalikan
       </button>
 
       {/* Tombol Approved */}
@@ -36,20 +36,7 @@ export default function ToggleButton({ status, onChange }) {
         }`}
       >
         <CheckCircle2 size={16} />
-        Approved
-      </button>
-
-      {/* Tombol Rejected */}
-      <button
-        onClick={() => onChange("rejected")}
-        className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold border transition ${
-          status === "rejected"
-            ? "bg-red-100 border-red-400 text-red-700"
-            : "border-gray-300 text-gray-400 hover:border-red-300 hover:text-red-500"
-        }`}
-      >
-        <XCircle size={16} />
-        Rejected
+        Sudah Dikembalikan
       </button>
     </div>
   );

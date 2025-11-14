@@ -14,6 +14,8 @@
     const [remarksId, setRemarksId] = useState(null);
     const [remarks, setRemarks] = useState("");
     const [statusFilter, setStatusFilter] = useState("Pending");
+    const [searchTerm, setSearchTerm]= useState("");
+    const [debouncedSearch, setDeboundcedSearch] = useState("");
 
     const fetchData = async () => {
         try {
@@ -30,6 +32,14 @@
     useEffect(() => {
         fetchData();
     }, [selectedDate, selectedPIC]);
+
+    useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDeboundcedSearch(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
 
     // ✅ Filter data berdasarkan status (termasuk All)
   const filteredData = data.filter((item) => {
@@ -83,7 +93,17 @@
             </div>
 
             {/* Toggle */}
-            <div className="flex justify-end mb-4">
+            <div className="flex items-center justify-between mb-4">
+              {/* Search Input */}
+            <input
+            type="text"
+            placeholder="Cari Item Code..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 w-60 text-sm 
+                      focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+
             <ToggleButton status={statusFilter} onChange={setStatusFilter} />
             </div>
 
@@ -91,6 +111,7 @@
             <div className="overflow-x-auto border rounded-xl shadow-inner">
             <DataTable
                 data={filteredData}
+                searchTerm={debouncedSearch}
                 onEditRemarks={setRemarksId}
                 refresh={fetchData}
             />

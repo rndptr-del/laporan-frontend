@@ -58,14 +58,6 @@ export default function FilterBox({
           </button>
         </div>
       </div>
-
-      {/* Tombol Tampilan Grid (opsional) */}
-      <div className="flex justify-start mt-3">
-        <button className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg">
-          <Grid size={16} />
-          Tampilan Grid
-        </button>
-      </div>
     </div>
   );
 }

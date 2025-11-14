@@ -9,6 +9,7 @@ import InputDataValidasiPage from './pages/InputDataValidasiPage'
 import ValidasiPengembalianPage from './pages/ValidasiPengembalianPage'
 import { Routes, Route } from 'react-router-dom'
 import { ImageOff } from 'lucide-react'
+import DashboardPage from './pages/DashboardPage'
 
 function App() {
   return(
@@ -17,6 +18,7 @@ function App() {
       <Route path="/timbang" element={<TimbangPage />} />
       <Route path="/inputvalidasi" element={<InputDataValidasiPage />} />
       <Route path="/validasipengembalian" element={<ValidasiPengembalianPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
     </Routes>
   );
 }

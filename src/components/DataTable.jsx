@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Edit3, CheckCircle2, Plus, Minus } from "lucide-react";
 import axios from "axios";
 
-export default function DataTable({ data, onEditRemarks, refresh }) {
+export default function DataTable({ data, onEditRemarks, refresh, searchTerm }) {
   const [conesData, setConesData] = useState({});
   const [binLocation, setBinLocation] = useState({});
   const [pic, setPic] = useState({});
@@ -48,48 +48,66 @@ export default function DataTable({ data, onEditRemarks, refresh }) {
     }));
   };
 
+  const filteredData = data.filter((item) =>
+    item.item_code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     
-    <table className="min-w-full text-sm border-collapse">
-      <thead className="bg-green-600 text-white">
-        <tr>
-          <th className="px-4 py-2 text-left">Item Code</th>
-          <th className="px-4 py-2 text-left">Batch</th>
-          <th className="px-4 py-2 text-right">Qty (Kg)</th>
-          <th className="px-4 py-2 text-right">Cones</th>
-          <th className="px-4 py-2 text-left">Bin Location</th>
-          <th className="px-4 py-2 text-left">PIC Timbang</th>
-          <th className="px-4 py-2 text-left">Remarks</th>
-          <th className="px-4 py-2 text-center">Status</th>
-          <th className="px-4 py-2 text-center sticky right-0 bg-green-600 text-white z-10">
-           Aksi
-          </th>
+  <div className="overflow-auto max-h-[500px] rounded-lg border">
+  <table className="min-w-full text-sm border-collapse">
+    <thead className="bg-green-600 text-white sticky top-0 z-30">
+      <tr>
+        <th className="px-4 py-3 text-left">Item Code</th>
+        <th className="px-4 py-3 text-left">Batch</th>
+        <th className="px-4 py-3 text-center">Qty (Kg)</th>
+        <th className="px-4 py-3 text-center">Cones</th>
+        <th className="px-4 py-3 text-left">Bin Location</th>
+        <th className="px-4 py-3 text-left">PIC Timbang</th>
+        <th className="px-4 py-3 text-left">Remarks</th>
+        <th className="px-4 py-3 text-center">Status</th>
+        <th className="px-4 py-3 text-center sticky right-0 bg-green-600 z-40">
+          Aksi
+        </th>
+      </tr>
+    </thead>
 
-        </tr>
-      </thead>
+    <tbody>
+      {filteredData.length > 0 ? (
+        filteredData.map((item) => {
+          const isApproved =
+            item.status === "saved" || item.status === "approved";
 
-      <tbody>
-        {data.length > 0 ? (
-          data.map((item) => {
-            const isApproved = item.status === "saved" || item.status === "approved";
-            return (
-              <tr
-                key={item.id}
-                className={`border-t transition ${
-                  isApproved
-                    ? "bg-green-50 hover:bg-green-100"
-                    : "hover:bg-green-50"
-                }`}
-              >
-                <td className="px-4 py-2">{item.item_code}</td>
-                <td className="px-4 py-2">{item.batch_number}</td>
-                <td className="px-4 py-2 text-right">{item.qty}</td>
+          return (
+            <tr
+              key={item.id}
+              className={`border-t transition ${
+                isApproved
+                  ? "bg-green-50 hover:bg-green-100"
+                  : "hover:bg-gray-50"
+              }`}
+            >
+              {/* Item Code */}
+              <td className="px-4 py-3 font-medium whitespace-nowrap">
+                {item.item_code}
+              </td>
 
-                {/* ✅ Kolom Cones + tombol plus/minus */}
-                <td className="px-4 py-2 text-right flex items-center justify-end gap-2">
+              {/* Batch */}
+              <td className="px-4 py-3 whitespace-nowrap">
+                {item.batch_number}
+              </td>
+
+              {/* Qty */}
+              <td className="px-4 py-3 text-center font-semibold">
+                {item.qty}
+              </td>
+
+              {/* Cones */}
+              <td className="px-4 py-3">
+                <div className="flex justify-center items-center gap-3">
                   <button
                     onClick={() => handleConesChange(item.id, -1)}
-                    className={`p-1 rounded-full ${
+                    className={`w-7 h-7 flex items-center justify-center rounded-full ${
                       isApproved
                         ? "bg-gray-300 cursor-not-allowed"
                         : "bg-red-500 hover:bg-red-600 text-white"
@@ -98,12 +116,14 @@ export default function DataTable({ data, onEditRemarks, refresh }) {
                   >
                     <Minus size={14} />
                   </button>
-                  <span className="font-semibold">
+
+                  <span className="font-semibold text-gray-800">
                     {conesData[item.id] ?? item.cones ?? 0}
                   </span>
+
                   <button
                     onClick={() => handleConesChange(item.id, 1)}
-                    className={`p-1 rounded-full ${
+                    className={`w-7 h-7 flex items-center justify-center rounded-full ${
                       isApproved
                         ? "bg-gray-300 cursor-not-allowed"
                         : "bg-green-500 hover:bg-green-600 text-white"
@@ -112,28 +132,39 @@ export default function DataTable({ data, onEditRemarks, refresh }) {
                   >
                     <Plus size={14} />
                   </button>
-                </td>
+                </div>
+              </td>
 
-                <td className="px-4 py-2">{item.bin_location || "-"}</td>
-                <td className="px-4 py-2">{item.pictimbang || "-"}</td>
-                <td className="px-4 py-2 text-gray-600">{item.remarks || "-"}</td>
+              {/* Bin Location */}
+              <td className="px-4 py-3 whitespace-nowrap">
+                {item.bin_location || "-"}
+              </td>
 
-                {/* ✅ Status */}
-                <td className="px-4 py-2 text-center">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center justify-center gap-1 ${
-                      isApproved
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {isApproved && <CheckCircle2 size={14} />}
-                    {isApproved ? "Approved" : "Pending"}
-                  </span>
-                </td>
+              {/* PIC */}
+              <td className="px-4 py-3">{item.pictimbang || "-"}</td>
 
-                {/* ✅ Tombol Aksi */}
-                  <td className="px-4 py-2 text-center flex justify-center gap-2 sticky right-0 bg-white z-10">
+              {/* Remarks */}
+              <td className="px-4 py-3 text-gray-600">
+                {item.remarks || "-"}
+              </td>
+
+              {/* Status */}
+              <td className="px-4 py-3 text-center">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center justify-center gap-1 ${
+                    isApproved
+                      ? "bg-green-100 text-green-700"
+                      : "bg-yellow-100 text-yellow-700"
+                  }`}
+                >
+                  {isApproved && <CheckCircle2 size={14} />}
+                  {isApproved ? "Approved" : "Pending"}
+                </span>
+              </td>
+
+              {/* Aksi */}
+              <td className="px-4 py-3 sticky right-0 bg-white z-20 w-28">
+                <div className="flex justify-center gap-2">
                   <button
                     onClick={() => onEditRemarks(item.id)}
                     className={`p-2 rounded-full ${
@@ -157,21 +188,23 @@ export default function DataTable({ data, onEditRemarks, refresh }) {
                   >
                     <CheckCircle2 size={16} />
                   </button>
-                </td>
-              </tr>
-            );
-          })
-        ) : (
-          <tr>
-            <td
-              colSpan="9"
-              className="text-center text-gray-500 py-6 italic bg-gray-50"
-            >
-              Tidak ada data untuk filter ini.
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+                </div>
+              </td>
+            </tr>
+          );
+        })
+      ) : (
+        <tr>
+          <td
+            colSpan="9"
+            className="text-center text-gray-500 py-6 italic bg-gray-50"
+          >
+            Tidak ada data untuk filter ini.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
   );
 }
