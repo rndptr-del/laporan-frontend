@@ -68,8 +68,8 @@
   };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-7xl">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-2 px-6 pb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-full">
             <h1 className="text-2xl font-bold text-green-600 mb-2 text-center">
             🧾 Validasi Pengembalian Benang
             </h1>

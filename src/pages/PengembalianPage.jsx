@@ -6,6 +6,7 @@ export default function PengembalianPage() {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [showModal, setShowModal] = useState(false);
+
   const [form, setForm] = useState({
     tanggal_timbang: "",
     tanggal_pengembalian: "",
@@ -56,47 +57,51 @@ export default function PengembalianPage() {
     fetchData();
   };
 
-
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 p-6">
-      <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-green-700 tracking-wide flex items-center gap-2">
-            📦 Laporan Pengembalian Benang To Rak
-          </h1>
-        </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <div className="bg-white rounded-2xl shadow-lg p-8 w-full ">
+        
+        {/* Header */}
+        <h1 className="text-2xl font-bold text-green-600 mb-2 text-center">
+          📦 Laporan Pengembalian Benang
+        </h1>
+        <p className="text-gray-500 text-center mb-6">
+          Gunakan filter untuk menampilkan data sesuai rentang tanggal.
+        </p>
 
-        {/* Filter dan Tombol */}
-        <div className="flex flex-wrap items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm">
-          <div className="flex items-center gap-2">
-            <label className="font-medium text-gray-700">Dari:</label>
+        {/* Filter */}
+        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-wrap items-center gap-4">
+          <div>
+            <label className="font-medium text-gray-700 block mb-1">Dari</label>
             <input
               type="date"
               value={start}
               onChange={(e) => setStart(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-green-500"
+              className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <label className="font-medium text-gray-700">Sampai:</label>
+
+          <div>
+            <label className="font-medium text-gray-700 block mb-1">Sampai</label>
             <input
               type="date"
               value={end}
               onChange={(e) => setEnd(e.target.value)}
-              className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-green-500"
+              className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500"
             />
           </div>
+
           <div className="ml-auto flex gap-3">
             <button
               onClick={handleExport}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-md transition transform hover:scale-105"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-md"
             >
               ⬇️ Export Excel
             </button>
+
             <button
               onClick={() => setShowModal(true)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 shadow-md transition transform hover:scale-105"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-md"
             >
               ➕ Tambah Data
             </button>
@@ -104,7 +109,7 @@ export default function PengembalianPage() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <div className="overflow-x-auto border rounded-xl shadow-inner">
           <table className="w-full border-collapse">
             <thead className="bg-green-700 text-white text-sm uppercase">
               <tr>
@@ -122,11 +127,8 @@ export default function PengembalianPage() {
             <tbody className="text-gray-700">
               {data.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan="9"
-                    className="text-center py-6 text-gray-500 bg-gray-50"
-                  >
-                    Tidak ada data yang ditemukan
+                  <td colSpan="9" className="text-center py-6 text-gray-500 bg-gray-50">
+                    Tidak ada data ditemukan
                   </td>
                 </tr>
               ) : (
@@ -139,12 +141,8 @@ export default function PengembalianPage() {
                     <td className="p-3">{d.tanggal_timbang}</td>
                     <td className="p-3">{d.tanggal_pengembalian}</td>
                     <td className="p-3">{d.tanggal_transfer}</td>
-                    <td className="p-3 font-semibold text-gray-800">
-                      {d.qty_kg}
-                    </td>
-                    <td className="p-3 font-semibold text-gray-800">
-                      {d.qty_kantong}
-                    </td>
+                    <td className="p-3 font-semibold">{d.qty_kg}</td>
+                    <td className="p-3 font-semibold">{d.qty_kantong}</td>
                     <td className="p-3">{d.pic}</td>
                     <td className="p-3">{d.shif}</td>
                     <td className="p-3 text-center">
@@ -163,17 +161,16 @@ export default function PengembalianPage() {
         </div>
       </div>
 
-      {/* Modal Tambah Data */}
+      {/* Modal Add */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg">
-            <h2 className="text-2xl font-bold mb-4 text-green-700">
-              ➕ Tambah Data Pengembalian
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg">
+            <h2 className="text-2xl font-bold mb-4 text-green-600">➕ Tambah Data</h2>
+
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
               {Object.keys(form).map((key) => (
-                <div key={key} className="flex flex-col">
-                  <label className="capitalize text-sm text-gray-700 font-medium mb-1">
+                <div key={key}>
+                  <label className="text-sm text-gray-700 font-medium">
                     {key.replace("_", " ")}
                   </label>
                   <input
@@ -185,25 +182,25 @@ export default function PengembalianPage() {
                         : "text"
                     }
                     value={form[key]}
-                    onChange={(e) =>
-                      setForm({ ...form, [key]: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-green-500"
                     required
-                    className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-green-500"
                   />
                 </div>
               ))}
+
               <div className="col-span-2 flex justify-end gap-3 mt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition"
+                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
                 >
                   Batal
                 </button>
+
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                 >
                   Simpan
                 </button>
@@ -212,6 +209,8 @@ export default function PengembalianPage() {
           </div>
         </div>
       )}
+
+      <p className="text-gray-400 text-xs mt-4">© {new Date().getFullYear()} Sistem Pengembalian – dibuat oleh Randi.</p>
     </div>
   );
 }
